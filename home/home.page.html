@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Storages list
+    </ion-title>
+    <ion-buttons slot="secondary">
+      ({{userName}})
+      <ion-button routerLink="/login" routerDirection="root">
+        <ion-icon slot="icon-only" name="log-out"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+  <ion-list-header>
+    <ion-label>Storages</ion-label>
+    <ion-button shape="round" fill="outline" color="success" (click)="add()">
+      <ion-icon slot="start" name="add"></ion-icon>add
+    </ion-button>
+  </ion-list-header>
+
+  <app-storage *ngIf="showNew" [isNew]="true" (addStorage)="addStorage($event)" (cancelAddingStorage)="showNew=false"></app-storage>
+
+<div *ngFor="let storage of storages;let i = index">
+  <ion-item-sliding>
+    <ion-item-options side="start">
+    <ion-item-option color="primary" (click)="showEdit=i">
+      <ion-icon name="create"></ion-icon>
+      Edit
+    </ion-item-option>
+
+    <ion-item-option color="danger" (click)="delete(storage)">
+      <ion-icon name="trash"></ion-icon>
+      Delete
+    </ion-item-option>
+    </ion-item-options>
+
+    <ion-item (click)="showEdit=-1">
+      <ion-icon name="cube" slot="start"></ion-icon>
+      <ion-label>{{storage.name}}</ion-label>
+      <ion-note slot="end">{{storage.area}}</ion-note>
+    </ion-item>
+    <ion-item-options side="end">
+      <ion-item-option color="secondary" [routerLink]="['/products/'+storage.area, {id: storage.id}]"
+                        routerDirection="forward">
+        <ion-icon name="reorder"></ion-icon>
+        Products
+      </ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
+
+  <app-storage *ngIf="showEdit==i" [isNew]="false" [pStorage]="storage"></app-storage>
+  </div>
+  </ion-list>
+  <ion-item text-center>
+    <ion-input type="text" [(ngModel)]="extraData"></ion-input>
+  </ion-item>
+  <ion-button color="primary" class="ion-float-right" (click)="getData()">
+    <ion-icon slot="start" name="sync"></ion-icon> 
+    Transfer data
+  </ion-button>
+</ion-content>
